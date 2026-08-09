@@ -1,0 +1,5 @@
+pipecat-ai[google,websocket,webrtc]
+pipecat-ai-prebuilt
+python-dotenv
+fastapi
+uvicorn[standard]
