@@ -1,9 +1,8 @@
-"""
-Swappable voice engine factory.
+"""Swappable voice engine factory.
 
 Provides `build_voice_pipeline()` which returns the Pipecat service stage(s)
-for the selected voice engine. The survey code imports only this factory —
-never engine-specific classes directly.
+for the selected voice engine. The survey brain (prompt + tools) is built
+once by main.py and passed in — this factory never imports survey modules.
 
 Supported engines:
   - "gemini"  : Google Gemini Live (native speech-to-speech) [DEFAULT]
@@ -19,30 +18,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from pipecat.adapters.schemas.tools_schema import ToolsSchema
 from pipecat.processors.frame_processor import FrameProcessor
 from pipecat.services.google.gemini_live.llm import GeminiLiveLLMService, GeminiVADParams
 
 if TYPE_CHECKING:
     from app.config import Settings
 
-# ---------------------------------------------------------------------------
-# Default system prompt — used only during scaffolding / smoke-testing.
-# --- SURVEY INTEGRATION POINT ---
-# When the survey brain is wired in, this prompt will be replaced by
-# survey.flow.SurveyFlow, which dynamically builds the system prompt
-# based on the current question from survey.json.
-# ---------------------------------------------------------------------------
-DEFAULT_SYSTEM_PROMPT = (
-    "You are a friendly assistant. "
-    "Greet the user warmly and have a short conversation."
-)
-
 
 def build_voice_pipeline(
     engine: str,
     config: "Settings",
     *,
-    system_prompt: str | None = None,
+    system_prompt: str,
+    tools: ToolsSchema | None = None,
 ) -> FrameProcessor | list[FrameProcessor]:
     """
     Build and return the voice-engine stage(s) for the Pipecat pipeline.
@@ -53,9 +42,10 @@ def build_voice_pipeline(
         Which engine to use: "gemini", "openai", or "cascade".
     config : Settings
         Application settings (API keys, model name, etc.).
-    system_prompt : str | None
-        Override the default system prompt. When the survey brain is active,
-        it will pass its own prompt here.
+    system_prompt : str
+        The full system instruction (rendered by flow.build_survey_prompt).
+    tools : ToolsSchema | None
+        The survey function-calling tools (built by tools.build_survey_tools).
 
     Returns
     -------
@@ -64,24 +54,35 @@ def build_voice_pipeline(
         (cascade: [stt, llm, tts]) to splice into the Pipeline.
         The caller should handle both cases — see main.py.
     """
-    prompt = system_prompt or DEFAULT_SYSTEM_PROMPT
 
     # ------------------------------------------------------------------
     # ENGINE: Google Gemini Live (native speech-to-speech)
     # ------------------------------------------------------------------
     if engine == "gemini":
+        from pipecat.services.google.gemini_live.llm import GeminiLiveLLMService
+
+        # Monkeypatch _connection_task_handler to lock audio transcription to en-US.
+        # Pipecat 1.7 hardcodes AudioTranscriptionConfig() without languageCodes.
+        original_handler = GeminiLiveLLMService._connection_task_handler
+
+        async def patched_connection_task_handler(self, config):
+            if hasattr(config, "input_audio_transcription") and config.input_audio_transcription is not None:
+                config.input_audio_transcription.language_codes = ["en-US"]
+            if hasattr(config, "output_audio_transcription") and config.output_audio_transcription is not None:
+                config.output_audio_transcription.language_codes = ["en-US"]
+            return await original_handler(self, config)
+
+        GeminiLiveLLMService._connection_task_handler = patched_connection_task_handler
+
         llm = GeminiLiveLLMService(
             api_key=config.google_api_key,
             settings=GeminiLiveLLMService.Settings(
                 model=config.gemini_model,
-                system_instruction=prompt,
+                system_instruction=system_prompt,
                 voice="Aoede",  # Options: Puck, Charon, Kore, Fenrir, Aoede
-                vad=GeminiVADParams(disabled=True),
+                language="en-US", # Locks text generation and TTS to en-US
             ),
-            # --- SURVEY INTEGRATION POINT ---
-            # When function-call tools are added (survey.tools), pass them
-            # via the `tools=` parameter here. Example:
-            #   tools=survey_tools,
+            tools=tools,
         )
         return llm
 
@@ -89,14 +90,36 @@ def build_voice_pipeline(
     # ENGINE: OpenAI Realtime API  [TODO]
     # ------------------------------------------------------------------
     elif engine == "openai":
-        # TODO: Implement OpenAI Realtime voice engine.
-        # Expected import:
-        #   from pipecat.services.openai_realtime import OpenAIRealtimeService
-        # Similar pattern: instantiate with api_key, model, system_prompt.
-        raise NotImplementedError(
-            "OpenAI Realtime engine is not yet implemented. "
-            "Contributions welcome — see voice_engine.py for the pattern."
+        from pipecat.services.openai.realtime.llm import OpenAIRealtimeLLMService
+        from pipecat.services.openai.realtime.events import (
+            SessionProperties,
+            AudioConfiguration,
+            AudioInput,
+            AudioOutput,
+            InputAudioTranscription
         )
+
+        if not config.openai_api_key:
+            raise RuntimeError("OPENAI_API_KEY must be set to use the openai engine.")
+
+        llm = OpenAIRealtimeLLMService(
+            api_key=config.openai_api_key,
+            settings=OpenAIRealtimeLLMService.Settings(
+                model="gpt-realtime-2.1-mini",
+                system_instruction=system_prompt,
+                session_properties=SessionProperties(
+                    audio=AudioConfiguration(
+                        input=AudioInput(
+                            transcription=InputAudioTranscription(language="en"),
+                            turn_detection=False  # Disable server VAD to prevent duplicates with our local VAD
+                        ),
+                        output=AudioOutput(voice="alloy"),
+                    )
+                )
+            ),
+            tools=tools,
+        )
+        return llm
 
     # ------------------------------------------------------------------
     # ENGINE: Cascade (separate STT → LLM → TTS)  [TODO]

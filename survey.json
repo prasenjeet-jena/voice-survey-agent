@@ -1,0 +1,234 @@
+{
+    "title": "NielsenIQ Consumer Panel — Chocolate & Beverages",
+    "description": "A short panel survey about your chocolate and beverage purchasing habits. There are no right or wrong answers — we just want your honest take.",
+    "market": "US",
+    "currency": "USD",
+    "questions": [
+        {
+            "id": "q1",
+            "text": "To start, which of these do you buy at least occasionally?",
+            "type": "multi_choice",
+            "options": [
+                "Chocolate",
+                "Soft drinks",
+                "Juices",
+                "Tea or coffee",
+                "Energy drinks",
+                "None of these"
+            ],
+            "required": true,
+            "note": "Screener. If 'None of these', thank and wrap up early."
+        },
+        {
+            "id": "q2",
+            "text": "How often do you buy chocolate?",
+            "type": "single_choice",
+            "options": [
+                "Weekly or more",
+                "A few times a month",
+                "About once a month",
+                "Rarely"
+            ],
+            "required": true
+        },
+        {
+            "id": "q3",
+            "text": "What type of chocolate do you buy most often?",
+            "type": "single_choice",
+            "options": [
+                "Dark",
+                "Milk",
+                "White",
+                "Assorted / mixed"
+            ],
+            "required": true
+        },
+        {
+            "id": "q4",
+            "text": "Which chocolate brands do you usually reach for?",
+            "type": "open",
+            "options": [],
+            "required": false
+        },
+        {
+            "id": "q5",
+            "text": "What matters most to you when choosing chocolate? You can pick a few.",
+            "type": "multi_choice",
+            "options": [
+                "Price",
+                "Brand",
+                "Taste",
+                "Health or sugar content",
+                "Packaging",
+                "Deals or offers"
+            ],
+            "required": true
+        },
+        {
+            "id": "q6",
+            "text": "Where do you usually buy your chocolate?",
+            "type": "single_choice",
+            "options": [
+                "Supermarket",
+                "Local / convenience store",
+                "Online",
+                "Wholesale club"
+            ],
+            "required": true
+        },
+        {
+            "id": "q7",
+            "text": "Roughly how much do you spend on chocolate in a typical month?",
+            "type": "single_choice",
+            "options": [
+                "Under $10",
+                "$10 to $25",
+                "$25 to $50",
+                "Over $50"
+            ],
+            "required": false
+        },
+        {
+            "id": "q8",
+            "text": "Has your chocolate spending changed over the past year?",
+            "type": "single_choice",
+            "options": [
+                "Increased",
+                "Stayed about the same",
+                "Decreased"
+            ],
+            "required": false
+        },
+        {
+            "id": "q9",
+            "text": "Do you pay attention to sugar or health labels on chocolate?",
+            "type": "single_choice",
+            "options": [
+                "Always",
+                "Sometimes",
+                "Never"
+            ],
+            "required": false
+        },
+        {
+            "id": "q10",
+            "text": "Now let's talk drinks. Which beverages do you drink most? Pick as many as apply.",
+            "type": "multi_choice",
+            "options": [
+                "Soft drinks",
+                "Juices",
+                "Tea or coffee",
+                "Energy drinks",
+                "Bottled water",
+                "Sports drinks"
+            ],
+            "required": true
+        },
+        {
+            "id": "q11",
+            "text": "How often do you buy packaged beverages?",
+            "type": "single_choice",
+            "options": [
+                "Daily",
+                "Weekly",
+                "A few times a month",
+                "Rarely"
+            ],
+            "required": true
+        },
+        {
+            "id": "q12",
+            "text": "Which beverage brands do you buy most often?",
+            "type": "open",
+            "options": [],
+            "required": false
+        },
+        {
+            "id": "q13",
+            "text": "What matters most when you pick a beverage? Pick a few if you like.",
+            "type": "multi_choice",
+            "options": [
+                "Price",
+                "Brand",
+                "Taste",
+                "Sugar or calories",
+                "Natural ingredients",
+                "Packaging size"
+            ],
+            "required": true
+        },
+        {
+            "id": "q14",
+            "text": "Where do you usually buy your beverages?",
+            "type": "single_choice",
+            "options": [
+                "Supermarket",
+                "Local / convenience store",
+                "Online",
+                "Wholesale club"
+            ],
+            "required": true
+        },
+        {
+            "id": "q15",
+            "text": "Roughly how much do you spend on beverages in a typical month?",
+            "type": "single_choice",
+            "options": [
+                "Under $20",
+                "$20 to $50",
+                "$50 to $100",
+                "Over $100"
+            ],
+            "required": false
+        },
+        {
+            "id": "q16",
+            "text": "Are you buying more or fewer sugar-free or low-sugar drinks lately?",
+            "type": "single_choice",
+            "options": [
+                "More",
+                "About the same",
+                "Fewer"
+            ],
+            "required": false
+        },
+        {
+            "id": "q17",
+            "text": "Have you tried any new chocolate or beverage product recently? Tell me a little about it.",
+            "type": "open",
+            "options": [],
+            "required": false
+        },
+        {
+            "id": "q18",
+            "text": "When you try something new in these categories, what usually gets you to try it?",
+            "type": "single_choice",
+            "options": [
+                "Seeing an ad",
+                "A recommendation",
+                "In-store display or sample",
+                "Price or promotion",
+                "Just curious"
+            ],
+            "required": false
+        },
+        {
+            "id": "q19",
+            "text": "How likely are you to recommend your favorite chocolate or beverage brand to a friend?",
+            "type": "single_choice",
+            "options": [
+                "Very likely",
+                "Somewhat likely",
+                "Not likely"
+            ],
+            "required": true
+        },
+        {
+            "id": "q20",
+            "text": "Last one — anything else you'd like to share about your chocolate or beverage habits?",
+            "type": "open",
+            "options": [],
+            "required": false
+        }
+    ]
+}

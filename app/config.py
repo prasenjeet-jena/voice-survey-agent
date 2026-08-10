@@ -20,6 +20,7 @@ class Settings:
 
     # --- Required ---
     google_api_key: str = field(default_factory=lambda: os.environ.get("GOOGLE_API_KEY", ""))
+    openai_api_key: str | None = field(default_factory=lambda: os.environ.get("OPENAI_API_KEY", None))
 
     # --- Voice engine selection ---
     # Supported values: "gemini" (default), "openai" (TODO), "cascade" (TODO)
