@@ -40,7 +40,7 @@ Google's Gemini Flash tier is heavily optimized for cost-efficiency, processing 
 - **Audio Output Rate**: Gemini Native Audio output is generally significantly cheaper than GPT-4o-mini, heavily subsidized for the Flash tier. 
 
 ### Per-Survey Calculation:
-1. **Audio Input (User)**: 2 minutes = ~3,000 tokens = **~$0.0002**
+1. **Audio Input (User)**: 2 minutes = ~ 3,000 tokens = **~$0.0002**
 2. **Audio Output (Agent)**: 3 minutes = **~$0.015** (Estimated native audio generation rate)
 3. **Text Context & Tool Calling**: **~$0.005**
 
