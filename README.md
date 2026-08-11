@@ -91,6 +91,17 @@ Click **Connect** to start the voice session.
 
 ---
 
+## Production Cost Estimation
+
+We have prepared a detailed breakdown of the token consumption, audio billing, and infrastructural costs associated with running this survey at scale (from 1,000 to 100,000 users). 
+
+- **OpenAI Realtime (`gpt-4o-mini`)**: ~$0.21 per survey session.
+- **Gemini Live (`gemini-2.5-flash`)**: ~$0.02 per survey session.
+
+For the full mathematical breakdown, please read the [COST_ESTIMATE.md](./COST_ESTIMATE.md) file.
+
+---
+
 ## Project Structure
 
 ### Application Core
