@@ -33,18 +33,19 @@ OpenAI charges distinct, premium rates for native Audio tokens compared to stand
 
 ---
 
-## 3. Gemini Live (`gemini-2.5-flash-native-audio-preview`)
+## 3. Gemini Live (`gemini-2.5-flash-native-audio-preview` / `gemini-2.0-flash-exp`)
 
 Google's Gemini Flash tier is heavily optimized for cost-efficiency, processing multimodal audio inputs at a fraction of the cost of standard text-to-speech pipelines.
-- **Multimodal Input Rate**: ~$0.075 per 1M tokens (Audio tokenizes at ~25 tokens per second).
-- **Audio Output Rate**: Gemini Native Audio output is generally significantly cheaper than GPT-4o-mini, heavily subsidized for the Flash tier. 
+- **Audio Input Rate**: ~$0.10 per 1M tokens (or roughly $0.0001 per second of audio).
+- **Audio Output Rate**: Gemini Native Audio output is generally billed at a premium over text, but is heavily subsidized for the Flash tier—typically around ~$2.00 per 1M tokens (or ~$0.0004 per second), which is significantly cheaper than OpenAI's $20.00 per 1M rate.
+- *(Note: Actual token rates may vary; check the [Google AI Studio Pricing](https://ai.google.dev/pricing) for the latest exact Live API tiered pricing).*
 
 ### Per-Survey Calculation:
-1. **Audio Input (User)**: 2 minutes = ~ 3,000 tokens = **~$0.0002**
-2. **Audio Output (Agent)**: 3 minutes = **~$0.015** (Estimated native audio generation rate)
+1. **Audio Input (User)**: 2 minutes (120 seconds) = **~$0.012** 
+2. **Audio Output (Agent)**: 3 minutes (180 seconds) = **~$0.072**
 3. **Text Context & Tool Calling**: **~$0.005**
 
-**Estimated Cost per Survey**: **~$0.02**
+**Estimated Cost per Survey**: **~$0.089** (Rounded to ~$0.09)
 
 ### Production Scale (Gemini):
 - **1,000 users**: $20
@@ -69,4 +70,15 @@ Beyond the core LLM API costs, running this at scale will incur infrastructure c
    - *Est. Cost: $10 - $30/month.*
 
 ## Conclusion
-For an initial POC or low-volume testing (under 1,000 users), **OpenAI Realtime** provides exceptional accent comprehension at a manageable cost (~$210). However, for mass-market production scale (100k+ surveys), **Gemini Live** is the financially viable choice, reducing API costs by nearly 10x while maintaining excellent conversational flow.
+For an initial POC or low-volume testing (under 1,000 users), **OpenAI Realtime** provides exceptional accent comprehension at a manageable cost (~$210). However, for mass-market production scale (100k+ surveys), **Gemini Live** is the financially viable choice, reducing API costs by more than half while maintaining excellent conversational flow.
+
+---
+
+## 5. Future-Proofing & Newer Models
+
+The generative voice AI space is moving incredibly fast. When moving to production, consider upgrading to the latest model endpoints to capture lower latencies, cheaper token costs, and better reasoning.
+
+- **OpenAI GPT Realtime 2 (`gpt-4.5-realtime` / Next-Gen)**: OpenAI is actively iterating on the Realtime API. Newer iterations (like GPT Realtime 2 / `gpt-4.5`) are expected to further reduce the $10/$20 audio token costs while improving multi-turn instruction following. Keep an eye on the [OpenAI Pricing page](https://openai.com/api/pricing/).
+- **Gemini 3.0 / 3.1 Flash Live**: Google's `gemini-2.0-flash` and `gemini-2.5-flash` natively support the Multimodal Live API. As Google rolls out 3.0+ variants, expect improvements in tool-calling latency over WebSocket connections. Check [Vertex AI Pricing](https://cloud.google.com/vertex-ai/pricing) for enterprise SLAs. 
+
+Because we use **Pipecat** as our orchestration layer, swapping to these newer models is as simple as updating the model string in `voice_engine.py`—no architectural changes are required.
