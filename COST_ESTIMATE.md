@@ -22,7 +22,7 @@ OpenAI charges distinct, premium rates for native Audio tokens compared to stand
 ### Per-Survey Calculation:
 1. **Audio Input (User)**: 2 minutes = ~4,800 tokens = **$0.048**
 2. **Audio Output (Agent)**: 3 minutes = ~7,200 tokens = **$0.144**
-3. **Text Context & Tool Calling**: Cumulative context across 25 turns = ~30,000 input text tokens + ~ 1,000 output text tokens = **~$0.020**
+3. **Text Context & Tool Calling**: Cumulative context across 25 turns = ~ 30,000 input text tokens + ~ 1,000 output text tokens = **~$0.020**
 
 **Estimated Cost per Survey**: **~$0.21**
 
